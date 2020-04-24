@@ -3,12 +3,18 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -43,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +62,44 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
+        TextView origin = findViewById(R.id.origin_tv);
+        String placeOfOrigin = sandwich.getPlaceOfOrigin();
+        if (!placeOfOrigin.isEmpty()) {
+            origin.setText(placeOfOrigin);
+        } else {
+            origin.setVisibility(View.GONE);
+            findViewById(R.id.origin_label).setVisibility(View.GONE);
+        }
 
+        TextView description = findViewById(R.id.description_tv);
+        description.setText(sandwich.getDescription());
+
+        TextView ingredients = findViewById(R.id.ingredients_tv);
+        ingredients.setText(joinStrings(sandwich.getIngredients()));
+
+        TextView alsoKnownAs = findViewById(R.id.also_known_tv);
+        String aka = joinStrings(sandwich.getAlsoKnownAs());
+        if (!aka.isEmpty()) {
+            alsoKnownAs.setText(aka);
+        } else {
+            alsoKnownAs.setVisibility(View.GONE);
+            findViewById(R.id.also_known_label).setVisibility(View.GONE);
+        }
+    }
+
+    private String joinStrings(List<String> strings) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<String> it = strings.iterator();
+
+        while (it.hasNext()) {
+            sb.append(it.next());
+
+            if (it.hasNext()) {
+                sb.append(", ");
+            }
+        }
+
+        return sb.toString();
     }
 }
