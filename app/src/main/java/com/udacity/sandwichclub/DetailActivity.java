@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,30 +77,16 @@ public class DetailActivity extends AppCompatActivity {
         description.setText(sandwich.getDescription());
 
         TextView ingredients = findViewById(R.id.ingredients_tv);
-        ingredients.setText(joinStrings(sandwich.getIngredients()));
+
+        ingredients.setText(TextUtils.join(", ", sandwich.getIngredients()));
 
         TextView alsoKnownAs = findViewById(R.id.also_known_tv);
-        String aka = joinStrings(sandwich.getAlsoKnownAs());
+        String aka = TextUtils.join(", ", sandwich.getAlsoKnownAs());
         if (!aka.isEmpty()) {
             alsoKnownAs.setText(aka);
         } else {
             alsoKnownAs.setVisibility(View.GONE);
             findViewById(R.id.also_known_label).setVisibility(View.GONE);
         }
-    }
-
-    private String joinStrings(List<String> strings) {
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> it = strings.iterator();
-
-        while (it.hasNext()) {
-            sb.append(it.next());
-
-            if (it.hasNext()) {
-                sb.append(", ");
-            }
-        }
-
-        return sb.toString();
     }
 }
